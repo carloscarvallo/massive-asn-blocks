@@ -10,9 +10,11 @@ request(pageToVisit, function(error, response, body) {
    if(response.statusCode === 200) {
      var $ = cheerio.load(body);
      var ip = [];
+     //console.log($('tr td a').text());
      $('tr td a').each(function(i, elem){
        ip[i] = $(this).text();
      });
+     //ip.join(",");
      for(var i = 1, newip = []; i < ip.length - 1; i++){
        if( ip[i] === "" ){
          ip.splice(i, 1);

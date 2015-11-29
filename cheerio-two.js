@@ -1,9 +1,4 @@
-var request = require('request');
-var cheerio = require('cheerio');
-var URL = require('url-parse');
-
-var jsonHttp = require('json-http');
-var fs = require('fs');
+var request = require('request'), cheerio = require('cheerio'), jsonHttp = require('json-http'), fs = require('fs');
 
 jsonHttp.getJson('http://ipinfo.io/json', function(err, response){
 
@@ -16,8 +11,8 @@ jsonHttp.getJson('http://ipinfo.io/json', function(err, response){
        console.log("Error: " + error);
      }
      if(response.statusCode === 200) {
-       var $ = cheerio.load(body);
-       var ip = [];
+       var $ = cheerio.load(body), ip = [];
+
        $('tr td a').each(function(i, elem){
          ip[i] = $(this).text();
        });
@@ -25,11 +20,11 @@ jsonHttp.getJson('http://ipinfo.io/json', function(err, response){
          if( ip[i] === "" ){
            ip.splice(i, 1);
          }
-         newip[i -1] = ip[i];
+         newip.push({bloque : ip[i]});
        }
        console.log(newip);
     }
-    fs.writeFile( asn + "-" + ip[0] + '.txt', newip, function(err) {
+    fs.writeFile( asn + "-" + ip[0] + '.txt', JSON.stringify(newip), function(err) {
     if (err)
       console.log(err);
     else

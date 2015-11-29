@@ -29,12 +29,11 @@ jsonHttp.getJson('http://ipinfo.io/json', function(err, response){
        }
        console.log(newip);
     }
+    fs.writeFile( asn + "-" + ip[0] + '.txt', newip, function(err) {
+    if (err)
+      console.log(err);
+    else
+      console.log('Operacion completada');
+    });
   });
-
-  //fs.writeFile( asn +'.txt', asn, function(err) {
-  //if (err)
-  //  console.log(err);
-  //else
-  //  console.log('Operacion completada');
-  //});
 });

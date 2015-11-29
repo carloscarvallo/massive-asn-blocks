@@ -3,9 +3,9 @@ var fs = require('fs');
 
 jsonHttp.getJson('http://ipinfo.io/json', function(err, response){
   
-  var res = response.org, pos = res.indexOf(" "), org = res.substring(0, pos);
+  var res = response.org, pos = res.indexOf(" "), asn = res.substring(0, pos);
   
-  fs.writeFile( org +'.txt', org, function(err) {
+  fs.writeFile( asn +'.txt', asn, function(err) {
   if (err)
     console.log(err);
   else

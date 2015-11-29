@@ -40,4 +40,5 @@ rl.question("Ingrese la IP para referencia: ", function(reqip){
       });
     });
   });
+  rl.close();
 });

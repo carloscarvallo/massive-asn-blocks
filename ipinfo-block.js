@@ -14,38 +14,41 @@ jsonHttp.getJson('http://ipinfo.io/json', function (err, res){
 
   rl.question("Ingrese IP de referencia: ", function(reqip){
 
-    jsonHttp.getJson('http://ipinfo.io/'+reqip+'/json', function(err, response){
+  var resCallback = function(err, response){
 
-      var res = response.org, pos = res.indexOf(" "), asn = res.substring(0, pos);
+    var res = response.org, pos = res.indexOf(" "), asn = res.substring(0, pos);
 
-      var pageToVisit = "http://4.ipinfo.io/"+asn;
+    var page = "http://4.ipinfo.io/"+asn;
 
-      request(pageToVisit, function(error, response, body) {
-         if(error) {
-           console.log("Error: " + error);
-         }
-         if(response.statusCode === 200) {
-           var $ = cheerio.load(body), ip = [];
+    var reqCallback = function(error, response, body) {
+       if(error) {
+         console.log("Error: " + error);
+       }
+       if(response.statusCode === 200) {
+         var $ = cheerio.load(body), ip = [];
 
-           $('tr td a').each(function(i, elem){
-             ip[i] = $(this).text();
-           });
-           for(var i = 1, newip = []; i < ip.length - 1; i++){
-             if( ip[i] === "" ){
-               ip.splice(i, 1);
-             }
-             newip.push(ip[i]);
+         $('tr td a').each(function(i, elem){
+           ip[i] = $(this).text();
+         });
+         for(var i = 1, newIp = []; i < ip.length - 1; i++){
+           if( ip[i] === "" ){
+             ip.splice(i, 1);
            }
-           console.log(newip);
-        }
-        fs.writeFile( asn + "-" + ip[0] + '.txt', JSON.stringify(newip), function(err) {
-        if (err)
-          console.log(err);
-        else
-          console.log('Operacion completada');
-        });
-      });
-    });
-    rl.close();
+           newIp.push(ip[i]);
+         }
+         console.log(newIp);
+      }
+      var callback = function(err) {
+      if (err)
+        console.log(err);
+      else
+        console.log('Operacion completada');
+      }
+      fs.writeFile( asn + "-" + ip[0] + '.txt', JSON.stringify(newIp), callback );
+    }
+    request(page, reqCallback);
+  }
+  jsonHttp.getJson('http://ipinfo.io/'+reqip+'/json', resCallback);
+  rl.close();
   });
 });

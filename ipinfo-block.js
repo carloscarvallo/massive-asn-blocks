@@ -1,4 +1,8 @@
-var request = require('request'), cheerio = require('cheerio'), jsonHttp = require('json-http'), fs = require('fs'), readline = require('readline');
+var request = require('request'),
+cheerio = require('cheerio'),
+jsonHttp = require('json-http'),
+fs = require('fs'),
+readline = require('readline');
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -23,20 +27,34 @@ var jsonCallback = function (err, res){
           console.log("Error: " + error);
         }
         if(response.statusCode === 200) {
-          var $ = cheerio.load(body), ip = [];
+          var $ = cheerio.load(body), ip = [], cantIp = [], relatedASN = [];
 
           $('tr td a').each(function(i, elem){
             var text = $(this).text();
-            ip[i] = text;
+            if (text !== ""){
+              if (!(text.indexOf("AS") == 0)) {
+                var p = text.indexOf("/");
+                var red = text.substring(0, p);
+                var cant = text.substring(p+1);
+                ip.push(red);
+                cantIp.push(cant);
+              } else {
+                relatedASN.push(text);
+              }
+            }
           });
           var country = ip.shift();
-          for(var i = 0, newIp = []; i < ip.length; i++){
-            if( ip[i] === "" ){
-              ip.splice(i, 1);
-            }
-            newIp.push(ip[i]);
-          }
-          console.log(newIp);
+          cantIp.shift();
+          // for(var i = 0, newIp = []; i < ip.length; i++){
+          //   if( ip[i] === "" ){
+          //     ip.splice(i, 1);
+          //   }
+          //   newIp.push(ip[i]);
+          // }
+          console.log(ip);
+          console.log(cantIp);
+          console.log("Related ASN:\n");
+          console.log(relatedASN);
         }
         var callback = function(err) {
           if (err)
@@ -44,7 +62,7 @@ var jsonCallback = function (err, res){
           else
           console.log('Operacion completada');
         }
-        fs.writeFile( asn + "-" + country + '.txt', JSON.stringify(newIp), callback );
+        fs.writeFile( asn + "-" + country + '.txt', JSON.stringify(ip), callback );
       }
       request(page, reqCallback);
     }

@@ -27,7 +27,7 @@ var jsonCallback = function (err, res){
           console.log("Error: " + error);
         }
         if(response.statusCode === 200) {
-          var $ = cheerio.load(body), ip = [], cantIp = [], relatedASN = [];
+          var $ = cheerio.load(body), ip = [[]], relatedASN = [];
 
           $('.table tr td a').each(function(i, elem){
             var text = $(this).text();
@@ -36,7 +36,7 @@ var jsonCallback = function (err, res){
                 var p = text.indexOf("/");
                 var red = text.substring(0, p);
                 var cant = text.substring(p+1);
-                ip.push(red, cant);
+                ip.push([red, cant]);
               } else {
                 relatedASN.push(text);
               }
@@ -53,7 +53,7 @@ var jsonCallback = function (err, res){
           else
           console.log('Operacion completada');
         }
-        fs.writeFile( asn + "-" + country + '.txt', JSON.stringify(ip), callback );
+        fs.writeFile( asn + "-" + country + '.json', JSON.stringify(ip), callback );
       }
       request(page, reqCallback);
     }

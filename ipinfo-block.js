@@ -19,8 +19,8 @@ var jsonCallback = function (err, res){
 
   var questionCallback = function(reqip){
     var resCallback = function(err, response){
-      var res = response.org, pos = res.indexOf(" "), asn = res.substring(0, pos);
-      var page = "http://4.ipinfo.io/"+asn;
+      var res = response.org, pos = res.indexOf(" "), asn = res.substring(0, pos),
+      country = response.country, page = "http://4.ipinfo.io/"+asn;
 
       var reqCallback = function(error, response, body) {
         if(error) {
@@ -29,30 +29,21 @@ var jsonCallback = function (err, res){
         if(response.statusCode === 200) {
           var $ = cheerio.load(body), ip = [], cantIp = [], relatedASN = [];
 
-          $('tr td a').each(function(i, elem){
+          $('.table tr td a').each(function(i, elem){
             var text = $(this).text();
             if (text !== ""){
               if (!(text.indexOf("AS") == 0)) {
                 var p = text.indexOf("/");
                 var red = text.substring(0, p);
                 var cant = text.substring(p+1);
-                ip.push(red);
-                cantIp.push(cant);
+                ip.push(red, cant);
               } else {
                 relatedASN.push(text);
               }
             }
           });
-          var country = ip.shift();
-          cantIp.shift();
-          // for(var i = 0, newIp = []; i < ip.length; i++){
-          //   if( ip[i] === "" ){
-          //     ip.splice(i, 1);
-          //   }
-          //   newIp.push(ip[i]);
-          // }
+          ip.splice(0, 2);
           console.log(ip);
-          console.log(cantIp);
           console.log("Related ASN:\n");
           console.log(relatedASN);
         }

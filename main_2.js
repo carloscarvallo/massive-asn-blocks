@@ -63,19 +63,10 @@ async.waterfall(
   ],
 
   function(err, blocks) {
-    console.log(blocks[0][0]+"\n");
     for (var i = 0; i < blocks.length; i++){
       var netblock = blocks[i][0], numIPs = blocks[i][1];
-      exec = spawnSync('nmap', ['-n', '-P0', '-vvv', netblock+"/"+numIPs]);
-      exec.stdout.on('data', function (data) {
-        console.log('stdout: ' + data);
-      });
-      exec.stderr.on('data', function (data) {
-        console.log('stderr: ' + data);
-      });
+      console.log(blocks[i][0]+" "+blocks[i][1]);
+      child = spawnSync('nmap', ['-n', '-P0', '-vvv', netblock+"/"+numIPs], {stdio:[0,1,2]});
     }
-    exec.on('close', function (code) {
-      console.log('child process exited with code ' + code);
-    });
   }
 );

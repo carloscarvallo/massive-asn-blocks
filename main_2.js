@@ -63,6 +63,7 @@ async.waterfall(
   ],
 
   function(err, blocks) {
+    console.log(blocks[0][0]+"\n");
     for (var i = 0; i < blocks.length; i++){
       var netblock = blocks[i][0], numIPs = blocks[i][1];
       exec = spawnSync('nmap', ['-n', '-P0', '-vvv', netblock+"/"+numIPs]);

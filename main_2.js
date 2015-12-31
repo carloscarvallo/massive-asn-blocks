@@ -4,7 +4,7 @@ jsonHttp = require('json-http'),
 fs = require('fs'),
 readline = require('readline'),
 async = require('async'),
-spawn = require('child_process').spawn;
+spawnSync = require('child_process').spawnSync;
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -63,23 +63,16 @@ async.waterfall(
   ],
 
   function(err, blocks) {
-    //for (var i = 0; i < blocks.length; i++){
-      var netblock = blocks[0][0], numIPs = blocks[0][1];
-
-      exec = spawn('nmap', ['-n', '-P0', '-vvv', netblock+"/"+numIPs]);
-
+    for (var i = 0; i < blocks.length; i++){
+      var netblock = blocks[i][0], numIPs = blocks[i][1];
+      exec = spawnSync('nmap', ['-n', '-P0', '-vvv', netblock+"/"+numIPs]);
       exec.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
       });
-
       exec.stderr.on('data', function (data) {
         console.log('stderr: ' + data);
       });
-
-      // setTimeout(function () {
-      //   exec.kill();
-      // }, 180000);
-    //}
+    }
     exec.on('close', function (code) {
       console.log('child process exited with code ' + code);
     });

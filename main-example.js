@@ -3,9 +3,7 @@ cheerio = require('cheerio'),
 jsonHttp = require('json-http'),
 fs = require('fs'),
 readline = require('readline'),
-async = require('async'),
-clc = require('cli-color'),
-spawnSync = require('child_process').spawnSync;
+async = require('async');
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -66,8 +64,7 @@ async.waterfall(
   function(err, blocks) {
     for (var i = 0; i < blocks.length; i++){
       var netblock = blocks[i][0], numIPs = blocks[i][1];
-      console.log(clc.blue(blocks[i][0]+"/"+blocks[i][1]));
-      child = spawnSync('nmap', ['-n', '-P0', '-vvv', netblock+"/"+numIPs], {stdio:[0,1,2]});
+      console.log("Red: "+ netblock + " Cantidad: " + numIPs);
     }
   }
 );

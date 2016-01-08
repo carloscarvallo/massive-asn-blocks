@@ -23,14 +23,30 @@ async.waterfall(
         rl.write("Your IP: "+res.ip+"\n\n");
         rl.write("Country: "+res.country+"\n\n");
         rl.write("ASN: "+res.org+"\n\n");
-        scp = cheerio.load('http://ipinfo.io/countries/'+res.country);
-        scp('table tr td a').each(function(i, elem){
-         rl.write(elem);
+
+        request({
+          method: 'GET',
+          url: 'http://ipinfo.io/countries/'+res.country
+          }, function(err, response, body, callback) {
+            if (err) return console.error(err);
+            $ = cheerio.load(body);
+            var asnArray = [];
+            $('table tr td').each(function(i, elem){
+              var text = $(this).children().first().text();
+              asnArray.push(text);
+            });
+          rl.write("ASNs assigned for "+res.country+"\n");
+          rl.write("\n");
+          for (var i = 0; i < asnArray.length; i++){
+            console.log(i+". "+ asnArray[i]);
+          }
+          rl.write("\n");
+          rl.question("ENTER to use your IP or type : ", function(reqip) {
+            rl.close();
+            callback(null, reqip);
+          });
         });
-        rl.question("ENTER to use your IP or type for another: ", function(reqip) {
-          rl.close();
-          callback(null, reqip);
-        });
+
       });
     },
 

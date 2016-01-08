@@ -12,16 +12,22 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
-rl.write("===============================\n");
-rl.write("Bloques de IPs a partir del ASN\n");
-rl.write("===============================\n\n");
+rl.write("=================\n");
+rl.write("Massive IP blocks\n");
+rl.write("=================\n\n");
 
 async.waterfall(
   [
     function(callback){
       jsonHttp.getJson('http://ipinfo.io/json', function(err, res) {
-        rl.write("Su ip actual es: "+res.ip+"\n\n");
-        rl.question("Ingrese IP requerida o ENTER para utilizar tu IP: ", function(reqip) {
+        rl.write("Your IP: "+res.ip+"\n\n");
+        rl.write("Country: "+res.country+"\n\n");
+        rl.write("ASN: "+res.org+"\n\n");
+        scp = cheerio.load('http://ipinfo.io/countries/'+res.country);
+        scp('table tr td a').each(function(i, elem){
+         rl.write(elem);
+        });
+        rl.question("ENTER to use your IP or type for another: ", function(reqip) {
           rl.close();
           callback(null, reqip);
         });
@@ -64,7 +70,7 @@ async.waterfall(
   ],
 
   function(err, blocks) {
-    for (var i = 0; i < blocks.length; i++){
+    for (var i = 0; i < blocks.length; i++) {
       var netblock = blocks[i][0], numIPs = blocks[i][1];
       console.log("\n");
       console.log(clc.blue(blocks[i][0]+"/"+blocks[i][1]));

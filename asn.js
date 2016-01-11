@@ -29,7 +29,6 @@ function init(callback){
           console.log(blockArray[reqip-1][1]);
           rl.close();
           request('http://ipinfo.io/'+blockArray[reqip-1][0], function(err, response, body){
-            console.log(body.length);
             callback(body);
           });
         });

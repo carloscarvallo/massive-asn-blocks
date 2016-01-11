@@ -3,9 +3,9 @@ blocks = require("./blocks"),
 clc = require('cli-color'),
 spawnSync = require('child_process').spawnSync;
 
-console.log("=================\n");
-console.log("Massive ASN blocks\n");
-console.log("=================\n\n");
+console.log("==================");
+console.log("Massive ASN blocks");
+console.log("==================\n");
 
 asn.init(function (page) {
   blocks.scrap(page, function (data) {

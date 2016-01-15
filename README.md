@@ -4,17 +4,12 @@ A script for mass scanning ASN blocks.
 
 ### Usage
 ```
-$ node index.js [parameters]
+$ asn-blocks [parameters]
 
-example: $ node index.js nmap -sP
-         $ node index.js smbclient -L
+and then follow instructions for scrap ASN blocks
 
-```
-
-
-```
-He will asked you for the ISO code of a country, 
-and then a especific ASN that you want to scan for that country.
+example: $ asn-blocks nmap -sP
+         $ asn-blocks smbclient -L
 
 ```
 

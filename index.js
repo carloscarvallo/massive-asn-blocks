@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 var asn = require("./asn"),
 blocks = require("./blocks"),
 clc = require('cli-color'),

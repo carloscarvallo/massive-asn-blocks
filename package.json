@@ -31,6 +31,7 @@
   ],
   "author": "Carlos Carvallo <carloscarvallo87@gmail.com>",
   "license": "ISC",
+  "preferGlobal": true,
   "bugs": {
     "url": "https://github.com/carloscarvallo/massive-asn-blocks/issues",
     "email": "erotomania669@gmail.com"

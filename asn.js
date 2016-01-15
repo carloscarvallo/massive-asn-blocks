@@ -20,6 +20,7 @@ function init(callback){
           }
         });
         blockArray.splice(0, 2);
+        rl.write("\n");
         for (var i = 0; i < blockArray.length; i++){
           console.log((i+1)+". "+blockArray[i][0]+" "+blockArray[i][1]);
         }

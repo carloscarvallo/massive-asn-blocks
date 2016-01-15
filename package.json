@@ -3,6 +3,9 @@
   "version": "1.0.1",
   "description": "Tool for extract ASN blocks ready for scan",
   "main": "index.js",
+  "bin": {
+    "asn-blocks": "index.js"
+  },
   "dependencies": {
     "cli-color": "^1.1.0",
     "json-http": "^1.0.2",

@@ -1,7 +1,7 @@
 {
-  "name": "asnblocks",
+  "name": "asn-blocks",
   "version": "1.0.0",
-  "description": "asn blocks scanner",
+  "description": "Tool for extract ASN blocks ready for scan",
   "main": "index.js",
   "dependencies": {
     "cli-color": "^1.1.0",
@@ -26,10 +26,11 @@
     "scan",
     "scanner"
   ],
-  "author": "Carlos Carvallo",
+  "author": "Carlos Carvallo <carloscarvallo87@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/carloscarvallo/massive-asn-blocks/issues"
+    "url": "https://github.com/carloscarvallo/massive-asn-blocks/issues",
+    "email": "erotomania669@gmail.com"
   },
   "homepage": "https://github.com/carloscarvallo/massive-asn-blocks#readme"
 }

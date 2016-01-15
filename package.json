@@ -1,6 +1,6 @@
 {
   "name": "asn-blocks",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Tool for extract ASN blocks ready for scan",
   "main": "index.js",
   "bin": {

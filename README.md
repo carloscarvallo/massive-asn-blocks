@@ -1,6 +1,10 @@
 # Massive ASN blocks
 A script for mass scanning ASN blocks.
 
+### Install
+```
+recomnended install globaly: $ npm install asn-blocks -g
+```
 
 ### Usage
 ```

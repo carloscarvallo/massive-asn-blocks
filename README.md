@@ -13,7 +13,6 @@ $ asn-blocks [parameters]
 and then follow instructions for scrap ASN blocks
 
 example: $ asn-blocks nmap -sP
-         $ asn-blocks smbclient -L
 
 ```
 
@@ -21,6 +20,13 @@ example: $ asn-blocks nmap -sP
 ```
 command executed will be:
 $ nmap -sP 190.168.0.1/24
-or
-$ smbclient -L 190.168.0.1/24
+```
+### ToDo
+
+```
+- Serialize data for the API
+- Add more providers
+- Independent modules for each task
+- Throw errors and usage
+- Help console
 ```

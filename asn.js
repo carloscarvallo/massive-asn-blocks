@@ -11,17 +11,18 @@ function init( callback ){
       request('http://ipinfo.io/countries/'+resp, function( err, response, html ){
         if (!err && response.statusCode == 200) {
           var $ = cheerio.load(html);
+          var name = $('#heading').text();
+          var text = "", org = "";
           var blockArray = [];
           $('tr').each(function(i, element) {
-            var text = $(this).children().first().text();
+            text = $(this).children().first().text();
             if (text !== ""){
-              var org = $(this).children().first().next().text();
+              org = $(this).children().first().next().text();
               blockArray.push([text, org]);
             }
           });
           blockArray.splice(0, 1);
           rl.write("\n");
-          console.log(blockArray);
           for (var i = 0; i < blockArray.length; i++){
             console.log((i+1)+". "+blockArray[i][0]+" "+blockArray[i][1]);
           }
@@ -31,7 +32,7 @@ function init( callback ){
             console.log( blockArray[reqip-1][1] );
             rl.close();
             request('http://ipinfo.io/'+blockArray[reqip-1][0], function( err, response, body ){
-            //callback(body);
+            callback(body);
           });
         });
       }

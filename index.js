@@ -1,5 +1,5 @@
 #! /usr/bin/env node
-var asn = require("./asn"),
+const asn = require("./asn"),
 blocks = require("./blocks"),
 clc = require('cli-color'),
 spawnSync = require('child_process').spawnSync,
@@ -18,13 +18,13 @@ asn(function (page) {
     for (var i = 2, args = []; i < proc.length; i++) {
       args.push(proc[i]);
     }
-    for (var i = 0; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
       var netblock = data[i][0], numIPs = data[i][1], com = "";
       args.push(netblock+"/"+numIPs);
       console.log(notice("\n++++++++++++++++++"));
       console.log(notice(" Command executed "));
       console.log(notice("++++++++++++++++++\n"));
-      for (var i = 2; i < proc.length; i++) {
+      for (i = 2; i < proc.length; i++) {
         if (i > 2) { com += " "+proc[i]; }
         else { com += proc[i]; }
       }

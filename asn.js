@@ -1,4 +1,4 @@
-var request = require('request'),
+const request = require('request'),
 cheerio = require('cheerio'),
 country = {},
 readline = require('readline'),
@@ -34,10 +34,12 @@ module.exports = function( callback ){
           rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
             rl.write("\n");
             // Name of the ASN
-            console.log( blockArray[reqip-1][1] );
+            var reqASN = blockArray[reqip-1][0];
+            var namASN = blockArray[reqip-1][1];
+            console.log( namASN );
             rl.close();
-            request('http://ipinfo.io/'+blockArray[reqip-1][0], function( err, response, body ){
-            callback(body);
+            request('http://ipinfo.io/'+reqASN, function( err, response, body ){
+              callback(body);
           });
         });
       }

@@ -3,7 +3,7 @@ readline = require('readline'),
 clc = require('cli-color');
 
 function scrap(page, callback){
-  var $ = cheerio.load(page), blocks = [[]], relatedASN = [];
+  var $ = cheerio.load(page), blocks = [], relatedASN = [];
   $('.table tr td a').each(function(i, elem){
     var text = $(this).text();
     if (i !== 0 && text !== ""){
@@ -17,7 +17,6 @@ function scrap(page, callback){
       }
     }
   });
-  blocks.splice(0, 1);
   callback(blocks);
 }
 

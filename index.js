@@ -10,11 +10,11 @@ console.log(notice("\n=================="));
 console.log(notice("Massive ASN blocks"));
 console.log(notice("==================\n"));
 
-asn.init(function (page) {
+asn(function (page) {
   if (proc[0].indexOf("node") != -1) {
     proc.splice(0, 1);
   }
-  blocks.scrap(page, function (data) {
+  blocks(page, function (data) {
     for (var i = 2, args = []; i < proc.length; i++) {
       args.push(proc[i]);
     }

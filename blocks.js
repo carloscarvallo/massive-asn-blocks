@@ -2,7 +2,7 @@ var cheerio = require('cheerio'),
 readline = require('readline'),
 clc = require('cli-color');
 
-function scrap(page, callback){
+module.exports = function(page, callback){
   var $ = cheerio.load(page), blocks = [], relatedASN = [];
   $('.table tr td a').each(function(i, elem){
     var text = $(this).text();
@@ -19,5 +19,3 @@ function scrap(page, callback){
   });
   callback(blocks);
 }
-
-exports.scrap = scrap;

@@ -7,7 +7,7 @@ rl = readline.createInterface({
     output: process.stdout
 });
 
-function init( callback ){
+module.exports = function( callback ){
     rl.question("Type the ISO code of the country to scan (ex. PY Paraguay, AR Argentina): ", function( resp ){
       request('http://ipinfo.io/countries/'+resp, function( err, response, html ){
         if (!err && response.statusCode == 200) {
@@ -44,5 +44,3 @@ function init( callback ){
     });
   });
 };
-
-exports.init = init;

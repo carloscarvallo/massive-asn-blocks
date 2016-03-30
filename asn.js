@@ -1,5 +1,6 @@
 var request = require('request'),
 cheerio = require('cheerio'),
+country = {},
 readline = require('readline'),
 rl = readline.createInterface({
     input: process.stdin,
@@ -22,13 +23,17 @@ function init( callback ){
             }
           });
           blockArray.splice(0, 1);
+          country.name = name;
+          country.ASN = [];
           rl.write("\n");
           for (var i = 0; i < blockArray.length; i++){
             console.log((i+1)+". "+blockArray[i][0]+" "+blockArray[i][1]);
+            country.ASN.push({ _id: i+1, dir: blockArray[i][0], name: blockArray[i][1]});
           }
           rl.write("\n");
           rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
             rl.write("\n");
+            // Name of the ASN
             console.log( blockArray[reqip-1][1] );
             rl.close();
             request('http://ipinfo.io/'+blockArray[reqip-1][0], function( err, response, body ){

@@ -27,7 +27,7 @@
     "scanner"
   ],
   "author": "Carlos Carvallo <carloscarvallo87@gmail.com>",
-  "license": "ISC",
+  "license": "GPLv3",
   "preferGlobal": true,
   "bugs": {
     "url": "https://github.com/carloscarvallo/massive-asn-blocks/issues",

@@ -12,8 +12,6 @@ module.exports = function(page, callback){
                 var red = text.substring(0, p);
                 var cant = text.substring(p+1);
                 blocks.push([red, cant]);
-            } else {
-                relatedASN.push(text);
             }
         }
     });

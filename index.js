@@ -18,7 +18,7 @@ section 4, provided you include this license notice and a URL
 through which recipients can access the Corresponding Source. */
 
 const input = require('./src/input'),
-blocks = require('./blocks'),
+blocks = require('./src/blocks'),
 clc = require('cli-color'),
 spawnSync = require('child_process').spawnSync,
 notice = clc.blue,

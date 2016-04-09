@@ -17,8 +17,7 @@ that code without the copy of the GNU GPL normally required by
 section 4, provided you include this license notice and a URL
 through which recipients can access the Corresponding Source. */
 
-const input = require('./src/input'),
-blocks = require('./src/blocks'),
+const scrap = require('./src/ipinfo-scrap'),
 clc = require('cli-color'),
 spawnSync = require('child_process').spawnSync,
 notice = clc.blue,
@@ -28,11 +27,11 @@ console.log(notice("\n=================="));
 console.log(notice("Massive ASN blocks"));
 console.log(notice("==================\n"));
 
-input.scrap(function (page) {
+scrap.asn(function (page) {
     if (proc[0].indexOf("node") != -1) {
         proc.splice(0, 1);
     }
-    blocks(page, function (data) {
+    scrap.block(page, function (data) {
         for (var i = 2, args = []; i < proc.length; i++) {
             args.push(proc[i]);
         }

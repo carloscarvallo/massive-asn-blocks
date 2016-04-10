@@ -9,7 +9,7 @@ rl = readline.createInterface({
     output: process.stdout
 });
 
-var input = new Promise(function(resolve, reject) {
+var getInput = new Promise(function(resolve, reject) {
 
     rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function(resp) {
         if ( !resp ) {
@@ -22,7 +22,7 @@ var input = new Promise(function(resolve, reject) {
 });
 
 var asnScrap = function (callback) {
-    input.then(function(input) {
+    getInput.then(function(input) {
 
         var options = {
             uri: ipinfo.url+'countries/'+input,

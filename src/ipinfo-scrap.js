@@ -1,87 +1,93 @@
 const readline = require('readline'),
       qhttp    = require('q-io/http'),
       cheerio  = require('cheerio'),
-      request  = require('request');
-      url      = 'http://ipinfo.io/',
+      rp       = require('request-promise');
+      ipinfo   = require('../providers/ipinfo'),
 
 rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-var getInput = function() {
-    return new Promise(function(resolve, reject) {
+var input = new Promise(function(resolve, reject) {
 
-        var count = 0;
-        count++;
-        rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function(resp) {
-            if ( !resp ) {
-                reject(new Error('country needed!'));
-            } else {
-                resolve(resp);
+    rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function(resp) {
+        if ( !resp ) {
+            reject(new Error('country needed!'));
+        } else {
+            resolve(resp);
+        }
+    });
+
+});
+
+var asnScrap = function (callback) {
+    input.then(function(input) {
+
+        var options = {
+            uri: ipinfo.url+'countries/'+input,
+            transform: function(body) {
+                return cheerio.load(body);
             }
-        });
+        };
 
-    })
-};
+        rp(options)
+        .then(function ($) {
 
-var asnScrap = function(callback) {
-    getInput()
-        .then(function(input) {
+            var name = $('#heading').text();
+            var text = "", org = "";
+            var blockArray = [];
+            $('tr').each(function() {
+                text = $(this).children().first().text();
+                if (text !== ""){
+                    org = $(this).children().first().next().text();
+                    blockArray.push([text, org]);
+                }
+            });
+            blockArray.splice(0, 1);
+            return blockArray;
 
+        })
+        .catch(function (err) {
+            // REQUEST ERROR TREATMENT
+            console.error(err);
+        })
+        .then(function(block){
 
-qhttp.read(url+'/countries/'+input)
-    .then(function(data){
-
-        return data.toString();
-
-    }, console.error)
-    .then(function(html){
-
-        var $ = cheerio.load(html);
-        var name = $('#heading').text();
-        var text = "", org = "";
-        var blockArray = [];
-        $('tr').each(function() {
-            text = $(this).children().first().text();
-            if (text !== ""){
-                org = $(this).children().first().next().text();
-                blockArray.push([text, org]);
-            }
-        });
-        blockArray.splice(0, 1);
-
-        return blockArray;
-
-    }, console.error)
-    .then(function(block){
-
-        block.map(function(item, index){
-            console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
-        });
-
-        var reqASN = 0;
-        rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
-
-            // Name of the ASN
-            reqASN = block[reqip-1][0];
-            var namASN = block[reqip-1][1];
-            console.log( namASN );
-            rl.close();
-
-            request('http://ipinfo.io/'+reqASN, function( err, response, body ){
-                callback(body);
+            block.map(function(item, index){
+                console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
             });
 
-        });
-    }, console.error)
-    .done();
+            var reqASN = 0;
+            rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
 
-        }, function(err){
-            console.error(err.message);
-            scrap();
-        });
+                // Name of the ASN
+                reqASN = block[reqip-1][0];
+                var namASN = block[reqip-1][1];
+                console.log( namASN );
+                rl.close();
 
+
+                rp(ipinfo.url+reqASN)
+                .then(function (body) {
+                    callback(body);
+                })
+                .catch(function (err) {
+                    console.error(err);
+                }).finally(function() {
+                    rl.close();
+                });
+
+            });
+        },
+        // CHEERIO ERROR TREATMENT
+        console.error);
+
+    }).catch(function(err) {
+        // INPUT ERROR TREATMENT
+        console.error(err.message);
+        rl.close();
+    });
 };
 
 var blockScrap = function(page, callback) {

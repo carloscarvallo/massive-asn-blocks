@@ -32,24 +32,24 @@ var asnScrap = function (callback) {
         };
 
         rp(options)
-        .then(function ($) {
+            .then(function ($) {
 
-            var name = $('#heading').text();
-            var text = "", org = "";
-            var blockArray = [];
-            $('tr').each(function() {
-                text = $(this).children().first().text();
-                if (text !== ""){
-                    org = $(this).children().first().next().text();
-                    blockArray.push([text, org]);
-                }
-            });
-            blockArray.splice(0, 1);
-            return blockArray;
+                var name = $('#heading').text();
+                var text = "", org = "";
+                var blockArray = [];
+                $('tr').each(function() {
+                    text = $(this).children().first().text();
+                    if (text !== ""){
+                        org = $(this).children().first().next().text();
+                        blockArray.push([text, org]);
+                    }
+                });
+                blockArray.splice(0, 1);
+                return blockArray;
 
         })
         .catch(function (err) {
-            // REQUEST ERROR TREATMENT
+            // TODO: Request error treatment
             console.error(err);
         })
         .then(function(block){
@@ -69,22 +69,23 @@ var asnScrap = function (callback) {
 
 
                 rp(ipinfo.url+reqASN)
-                .then(function (body) {
-                    callback(body);
-                })
-                .catch(function (err) {
-                    console.error(err);
-                }).finally(function() {
-                    rl.close();
-                });
+                    .then(function (body) {
+                        callback(body);
+                    })
+                    .catch(function (err) {
+                        // TODO: Request error treatment
+                        console.error(err);
+                    }).finally(function() {
+                        rl.close();
+                    });
 
             });
         },
-        // CHEERIO ERROR TREATMENT
+        // TODO: Cheerior error treatment
         console.error);
 
     }).catch(function(err) {
-        // INPUT ERROR TREATMENT
+        // TODO: Input error treatment
         console.error(err.message);
         rl.close();
     });

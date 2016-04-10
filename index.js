@@ -24,26 +24,31 @@ notice = clc.blue,
 proc = process.argv;
 
 scrap.asn(function (page) {
-    if (proc[0].indexOf("node") != -1) {
-        proc.splice(0, 1);
-    }
+    proc.map(function(item, i, array) {
+        if (i == 0 && item.indexOf("node") !== -1) {
+            array.splice(0, 1);
+        }
+    })
     scrap.block(page, function (data) {
-        for (var i = 2, args = []; i < proc.length; i++) {
-            args.push(proc[i]);
-        }
-        for (i = 0; i < data.length; i++) {
-            var netblock = data[i][0], numIPs = data[i][1], com = "";
-            args.push(netblock+"/"+numIPs);
-            console.log(notice("\n++++++++++++++++++"));
-            console.log(notice(" Command executed "));
-            console.log(notice("++++++++++++++++++\n"));
-            for (i = 2; i < proc.length; i++) {
-                if (i > 2) { com += " "+proc[i]; }
-                else { com += proc[i]; }
+        var args = [];
+        proc.map(function(item, i) {
+            if ( i >= 2 ) {
+                args.push(item);
             }
-            if (proc.length == 2) { console.log(notice(proc[1], netblock+"/"+numIPs)+"\n"); }
-            else { console.log(notice(proc[1], com+" "+netblock+"/"+numIPs)+"\n"); }
-            spawnSync(proc[1], args, {stdio:[0,1,2]});
-        }
+        })
+        data.map(function(item, i, array) {
+             var netblock = data[i][0], numIPs = data[i][1], com = "";
+             args.push(netblock+"/"+numIPs);
+             console.log(notice("\n++++++++++++++++++"));
+             console.log(notice(" Command executed "));
+             console.log(notice("++++++++++++++++++\n"));
+             for (i = 2; i < proc.length; i++) {
+                 if (i > 2) { com += " "+proc[i]; }
+                 else { com += proc[i]; }
+             }
+             if (proc.length == 2) { console.log(notice(proc[1], netblock+"/"+numIPs)+"\n"); }
+             else { console.log(notice(proc[1], com+" "+netblock+"/"+numIPs)+"\n"); }
+             spawnSync(proc[1], args, {stdio:[0,1,2]});
+        })
     });
 });

@@ -48,38 +48,38 @@ var asnScrap = function (callback) {
                 return blockArray;
 
         })
-        .catch(function (err) {
-            // TODO: Request error treatment
-            console.error(err);
+            .catch(function (err) {
+                // TODO: Request error treatment
+                console.error(err);
         })
-        .then(function(block){
+            .then(function(block) {
 
-            block.map(function(item, index){
-                console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
-            });
+                block.map(function(item, index){
+                    console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
+                });
 
-            var reqASN = 0;
-            rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
+                var reqASN = 0;
+                rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
 
                 // Name of the ASN
-                reqASN = block[reqip-1][0];
-                var namASN = block[reqip-1][1];
-                console.log( namASN );
-                rl.close();
+                    reqASN = block[reqip-1][0];
+                    var namASN = block[reqip-1][1];
+                    console.log( namASN );
+                    rl.close();
 
 
-                rp(ipinfo.url+reqASN)
-                    .then(function (body) {
-                        callback(body);
-                    })
-                    .catch(function (err) {
-                        // TODO: Request error treatment
-                        console.error(err);
-                    }).finally(function() {
-                        rl.close();
-                    });
+                    rp(ipinfo.url+reqASN)
+                        .then(function (body) {
+                            callback(body);
+                        })
+                        .catch(function (err) {
+                            // TODO: Request error treatment
+                            console.error(err);
+                        }).finally(function() {
+                            rl.close();
+                        });
 
-            });
+                });
         },
         // TODO: Cheerior error treatment
         console.error);

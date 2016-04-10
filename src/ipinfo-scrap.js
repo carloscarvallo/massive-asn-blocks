@@ -15,7 +15,7 @@ var input = new Promise(function(resolve, reject) {
         if ( !resp ) {
             reject(new Error('country needed!'));
         } else {
-            resolve(resp);
+            resolve(resp.toLowerCase());
         }
     });
 

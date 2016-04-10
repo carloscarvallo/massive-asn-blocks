@@ -23,10 +23,6 @@ spawnSync = require('child_process').spawnSync,
 notice = clc.blue,
 proc = process.argv;
 
-console.log(notice("\n=================="));
-console.log(notice("Massive ASN blocks"));
-console.log(notice("==================\n"));
-
 scrap.asn(function (page) {
     if (proc[0].indexOf("node") != -1) {
         proc.splice(0, 1);

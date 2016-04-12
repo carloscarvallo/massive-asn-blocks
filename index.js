@@ -25,17 +25,17 @@ proc = process.argv;
 
 scrap.asn(function (page) {
     proc.map(function(item, i, array) {
-        if (i == 0 && item.indexOf("node") !== -1) {
+        if (i === 0 && item.indexOf("node") !== -1) {
             array.splice(0, 1);
         }
-    })
+    });
     scrap.block(page, function (data) {
         var args = [];
         proc.map(function(item, i) {
             if ( i >= 2 ) {
                 args.push(item);
             }
-        })
+        });
         data.map(function(item, i, array) {
              var netblock = data[i][0], numIPs = data[i][1], com = "";
              args.push(netblock+"/"+numIPs);
@@ -49,6 +49,6 @@ scrap.asn(function (page) {
              if (proc.length == 2) { console.log(notice(proc[1], netblock+"/"+numIPs)+"\n"); }
              else { console.log(notice(proc[1], com+" "+netblock+"/"+numIPs)+"\n"); }
              spawnSync(proc[1], args, {stdio:[0,1,2]});
-        })
+        });
     });
 });

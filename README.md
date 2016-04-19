@@ -1,3 +1,5 @@
+## ******************************* Beta Version *******************************
+
 [![bitHound Overall Score](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks/badges/score.svg)](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks)
 [![bitHound Code](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks/badges/code.svg)](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks)
 
@@ -5,8 +7,6 @@
 
 [![Join the chat at https://gitter.im/carloscarvallo/massive-asn-blocks](https://badges.gitter.im/carloscarvallo/massive-asn-blocks.svg)](https://gitter.im/carloscarvallo/massive-asn-blocks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A script for mass scanning ASN blocks.
-
-## ******************************* Beta Version *******************************
 
 ### Install
 ```

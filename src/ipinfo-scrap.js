@@ -1,13 +1,8 @@
-const readline = require('readline'),
-      qhttp    = require('q-io/http'),
-      cheerio  = require('cheerio'),
-      rp       = require('request-promise');
-      ipinfo   = require('../providers/ipinfo'),
-
-rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
+const readline      = require('readline'),
+      cheerio       = require('cheerio'),
+      rp            = require('request-promise'),
+      ipinfo        = require('../providers/ipinfo'),
+      rl            = readline.createInterface(process.stdin, process.stdout);
 
 var getInput = new Promise(function(resolve, reject) {
 
@@ -22,7 +17,7 @@ var getInput = new Promise(function(resolve, reject) {
 });
 
 var asnScrap = function (callback) {
-    getInput.then(function(input) {
+    getInput.then(function (input) {
 
         var options = {
             uri: ipinfo.url+'countries/'+input,
@@ -32,57 +27,98 @@ var asnScrap = function (callback) {
         };
 
         rp(options)
-            .then(function ($) {
+        .then(function ($) {
 
-                var name = $('#heading').text();
-                var text = "", org = "";
-                var blockArray = [];
-                $('tr').each(function() {
-                    text = $(this).children().first().text();
-                    if (text !== ""){
-                        org = $(this).children().first().next().text();
-                        blockArray.push([text, org]);
-                    }
-                });
-                blockArray.splice(0, 1);
-                return blockArray;
+            var name = $('#heading').text();
+            var text = "", org = "";
+            var blockArray = [];
+            
+            $('tr').each(function() {
+                text = $(this).children().first().text();
+                if (text !== ""){
+                    org = $(this).children().first().next().text();
+                    blockArray.push([text, org]);
+                }
+            });
+            
+            blockArray.splice(0, 1);
+            return blockArray;
 
         })
-            .catch(function (err) {
-                // TODO: Request error treatment
-                console.error(err);
+        .catch(function (err) {
+            // TODO: Request error treatment
+            console.error(err);
         })
-            .then(function(block) {
+        .then(function(block) {
 
-                block.map(function(item, index){
-                    console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
-                });
+            block.map(function(item, index){
+                console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
+            });
 
-                var reqASN = 0;
-                rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
-
+            var reqAsn = 0;
+            rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
+                var asn = {};
                 // Name of the ASN
-                    reqASN = block[reqip-1][0];
-                    var namASN = block[reqip-1][1];
-                    console.log( namASN );
-                    rl.close();
+                reqAsn = block[reqip-1][0];
+                var namAsn = block[reqip-1][1];
+                asn.name = namAsn;
+                asn.dir = reqAsn;
+                asn.netBlocks = [];
+                console.log(asn.name, asn.dir);
 
+                var options = {
+                    uri: ipinfo.url+reqAsn,
+                    transform: function(body) {
+                        return cheerio.load(body);
+                    }
+                };
 
-                    rp(ipinfo.url+reqASN)
-                        .then(function (body) {
-                            callback(body);
-                        })
-                        .catch(function (err) {
-                            // TODO: Request error treatment
-                            console.error(err);
-                        }).finally(function() {
-                            rl.close();
-                        });
-
+                rp(options)
+                .then(function ($) {
+                    
+                    var blocks = [], 
+                        numIps = [],
+                        ip;
+                        
+                    $('#block-table tr td').each(function() {
+                        ip = $(this).next().prev().prev().text();
+                        cant = $(this).next().next().text();
+                            if ( ip !== "" ) {
+                                blocks.push(ip);
+                            }
+                            if ( cant !== "" ) {
+                                numIps.push(cant);
+                            }
+                    });
+                    
+                    blocks.forEach(function( item, i ) {
+                        asn.netBlocks.push( { _id: i+1, dir: item, num: numIps[i] } );
+                    });
+                    
+                    return asn;
+                })
+                .catch(function (err) {
+                    // TODO: Request error treatment
+                    console.error(err);
+                })
+                .then(function (asn) {
+                    
+                    //console.log(JSON.stringify(data, null, 4));
+                    asn.netBlocks.forEach(function ( item, i ) {
+                        console.log("%s. %s %s", asn.netBlocks[i]._id, asn.netBlocks[i].dir, asn.netBlocks[i].num);
+                    });
+                    
+                    rl.question("Choose a netBlock from " + asn.name +" "+ asn.dir +" : ", function( resp ){
+                        callback(asn.netBlocks[resp - 1].dir, asn.netBlocks[resp - 1].num);
+                        rl.close();
+                    });
                 });
-        },
-        // TODO: Cheerior error treatment
-        console.error);
+                
+            });
+        }).catch(function(err) {
+            // TODO: Cheerior error treatment
+            console.error(err);
+        });
 
     }).catch(function(err) {
         // TODO: Input error treatment
@@ -91,22 +127,4 @@ var asnScrap = function (callback) {
     });
 };
 
-var blockScrap = function(page, callback) {
-    var $ = cheerio.load(page), blocks = [];
-    $('.table tr td a').each(function(i, elem){
-        var text = $(this).text();
-        if (i !== 0 && text !== ""){
-            if (text.indexOf("AS") !== 0) {
-                var p = text.indexOf("/");
-                var red = text.substring(0, p);
-                var cant = text.substring(p+1);
-                blocks.push([red, cant]);
-            }
-        }
-    });
-    callback(blocks);
-};
-
-
 exports.asn = asnScrap;
-exports.block = blockScrap;

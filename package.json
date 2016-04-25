@@ -7,7 +7,9 @@
     "asn-blocks": "index.js"
   },
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "cheerio": "^0.20.0",
+    "cidr-js": "^2.3.1",
     "cli-color": "^1.1.0",
     "request-promise": "^2.0.1"
   },

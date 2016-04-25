@@ -20,35 +20,57 @@ through which recipients can access the Corresponding Source. */
 const scrap = require('./src/ipinfo-scrap'),
 clc = require('cli-color'),
 spawnSync = require('child_process').spawnSync,
-notice = clc.blue,
-proc = process.argv;
+CIDR = require('cidr-js'),
+cidr = new CIDR(),
+notice = clc.blue;
 
-scrap.asn(function (page) {
-    proc.map(function(item, i, array) {
-        if (i === 0 && item.indexOf("node") !== -1) {
-            array.splice(0, 1);
+var command = process.argv[2];
+
+function printCommand ( command, args ) {
+    var argsString = "";
+    args.forEach(function( item, i ) {
+        if ( i !== 0 ) {
+            argsString += " " + item;
+        } else {
+            argsString += item;
         }
     });
-    scrap.block(page, function (data) {
-        var args = [];
-        proc.map(function(item, i) {
-            if ( i >= 2 ) {
-                args.push(item);
-            }
+    console.log(command, argsString);
+}
+
+scrap.asn(function (ip, num) {
+    
+    var indexPrimerEspacio = command.indexOf(" ");
+    var comandoPrincipal = command.substring(0, indexPrimerEspacio);
+    var argumentosDelComando = command.substring(indexPrimerEspacio+1);
+    
+    console.log('You are about to scan %s numbers of Ips\n', num);
+    
+    if ( /\//.test(ip) == true && /nmap/.test(comandoPrincipal) == false) {
+        
+        var results = cidr.list(ip);
+        results.map(function(item, i) {
+            
+            var rep = argumentosDelComando.replace(/<ip>/, item);
+            var listArgs = rep.split(/\s/);
+            
+            printCommand(comandoPrincipal, listArgs);
+            spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
         });
-        data.map(function(item, i, array) {
-             var netblock = data[i][0], numIPs = data[i][1], com = "";
-             args.push(netblock+"/"+numIPs);
-             console.log(notice("\n++++++++++++++++++"));
-             console.log(notice(" Command executed "));
-             console.log(notice("++++++++++++++++++\n"));
-             for (i = 2; i < proc.length; i++) {
-                 if (i > 2) { com += " "+proc[i]; }
-                 else { com += proc[i]; }
-             }
-             if (proc.length == 2) { console.log(notice(proc[1], netblock+"/"+numIPs)+"\n"); }
-             else { console.log(notice(proc[1], com+" "+netblock+"/"+numIPs)+"\n"); }
-             spawnSync(proc[1], args, {stdio:[0,1,2]});
-        });
-    });
+        
+    } else {
+        
+        var p = ip.indexOf("/");
+        var IP = ip.substring(0, p);
+        var range = ip.substring(p+1);
+        
+        var rep = argumentosDelComando.replace(/<ip>/, IP);
+        var args = rep.replace(/<range>/, range);
+        var listArgs = args.split(/\s/);
+        
+        printCommand(comandoPrincipal, listArgs);
+        spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
+        
+    }
+    
 });

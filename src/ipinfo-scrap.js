@@ -4,20 +4,22 @@ const readline      = require('readline'),
       ipinfo        = require('../providers/ipinfo'),
       rl            = readline.createInterface(process.stdin, process.stdout);
 
-var getInput = new Promise(function(resolve, reject) {
+var getInput = function () {
+  var promise = new Promise(function(resolve, reject) {
+      rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function(resp) {
+          if ( resp ) {
+              resolve(resp.toLowerCase());
+          } else {
+              reject(new Error('country needed!'));
+          }
+      });
+  });
+  return promise;
+};
 
-    rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function(resp) {
-        if ( !resp ) {
-            reject(new Error('country needed!'));
-        } else {
-            resolve(resp.toLowerCase());
-        }
-    });
-
-});
 
 var asnScrap = function (callback) {
-    getInput.then(function (input) {
+    getInput().then(function (input) {
 
         var options = {
             uri: ipinfo.url+'countries/'+input,

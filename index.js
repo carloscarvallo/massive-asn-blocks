@@ -26,7 +26,7 @@ notice = clc.blue;
 
 var command = process.argv[2];
 
-function printCommand ( command, args ) {
+var printCommand = function ( command, args ) {
     var argsString = "";
     args.forEach(function( item, i ) {
         if ( i !== 0 ) {
@@ -36,41 +36,49 @@ function printCommand ( command, args ) {
         }
     });
     console.log(command, argsString);
+};
+
+if (command) {
+    init();
+} else {
+    console.error('ep');
+    process.exit();
 }
 
-scrap.asn(function (ip, num) {
-    
-    var indexPrimerEspacio = command.indexOf(" ");
-    var comandoPrincipal = command.substring(0, indexPrimerEspacio);
-    var argumentosDelComando = command.substring(indexPrimerEspacio+1);
-    
-    console.log('You are about to scan %s numbers of Ips\n', num);
-    
-    if ( /\//.test(ip) == true && /nmap/.test(comandoPrincipal) == false) {
+function init () {
+    scrap.asn(function (ip, num) {
         
-        var results = cidr.list(ip);
-        results.map(function(item, i) {
+        var indexPrimerEspacio = command.indexOf(" ");
+        var comandoPrincipal = command.substring(0, indexPrimerEspacio);
+        var argumentosDelComando = command.substring(indexPrimerEspacio+1);
+        
+        console.log('You are about to scan %s numbers of Ips\n', num);
+        
+        if ( /\//.test(ip) == true && /nmap/.test(comandoPrincipal) == false) {
             
-            var rep = argumentosDelComando.replace(/<ip>/, item);
-            var listArgs = rep.split(/\s/);
+            var results = cidr.list(ip);
+            results.map(function(item, i) {
+                
+                var rep = argumentosDelComando.replace(/<ip>/, item);
+                var listArgs = rep.split(/\s/);
+                
+                printCommand(comandoPrincipal, listArgs);
+                //spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
+            });
+            
+        } else {
+          
+            var p = ip.indexOf("/");
+            var IP = ip.substring(0, p);
+            var range = ip.substring(p+1);
+            
+            var rep = argumentosDelComando.replace(/<ip>/, IP);
+            var args = rep.replace(/<range>/, range);
+            var listArgs = args.split(/\s/);
             
             printCommand(comandoPrincipal, listArgs);
-            spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
-        });
-        
-    } else {
-        
-        var p = ip.indexOf("/");
-        var IP = ip.substring(0, p);
-        var range = ip.substring(p+1);
-        
-        var rep = argumentosDelComando.replace(/<ip>/, IP);
-        var args = rep.replace(/<range>/, range);
-        var listArgs = args.split(/\s/);
-        
-        printCommand(comandoPrincipal, listArgs);
-        spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
-        
-    }
-    
-});
+            //spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
+            
+        }  
+    });
+}

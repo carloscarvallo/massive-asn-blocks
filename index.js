@@ -18,11 +18,9 @@ section 4, provided you include this license notice and a URL
 through which recipients can access the Corresponding Source. */
 
 const scrap = require('./src/ipinfo-scrap'),
-clc = require('cli-color'),
 spawnSync = require('child_process').spawnSync,
 CIDR = require('cidr-js'),
-cidr = new CIDR(),
-notice = clc.blue;
+cidr = new CIDR();
 
 var command = process.argv[2];
 

@@ -24,7 +24,7 @@ cidr = new CIDR(),
 program = require('commander');
 
 function printCommand ( command, args ) {
-    
+
     var argsString = "";
     args.forEach(function( item, i ) {
         if ( i !== 0 ) {
@@ -34,25 +34,25 @@ function printCommand ( command, args ) {
         }
     });
     console.log(command, argsString);
-    
+
 }
 
 function parseArgs ( command ) {
-            
+
     var indexing = command.indexOf(" ");
     var comPrinc = command.substring(0, indexing);
     var comArgs = command.substring(indexing+1);
     return {
         princ : comPrinc,
-        args : comArgs   
+        args : comArgs
     }
- 
+
 }
 
 program
     .version('2.0.0')
     .option('-c, --command <args>', 'Command to be executed', parseArgs);
-    
+
     program.on('--help', function(){
     console.log('  Examples:');
     console.log('');
@@ -67,40 +67,44 @@ program.parse(process.argv);
 
 var init = function () {
     scrap.asn(function ( ip, num ) {
-        
+
         console.log('You are about to scan %s numbers of Ips\n', num);
-        
+
         if ( /\//.test(ip) == true && /nmap/.test(program.command.princ) == false) {
-            
+
             var results = cidr.list(ip);
             results.map(function(item, i) {
-                
+
                 var rep = program.command.args.replace(/<ip>/, item);
                 var listArgs = rep.split(/\s/);
-                
+
                 printCommand(program.command.princ, listArgs);
                 spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
             });
-            
+
         } else {
-          
+
             var p = ip.indexOf("/");
             var IP = ip.substring(0, p);
             var range = ip.substring(p+1);
-            
+
             var rep = program.command.args.replace(/<ip>/, IP);
             var args = rep.replace(/<range>/, range);
             var listArgs = args.split(/\s/);
-            
+
             printCommand(program.command.princ, listArgs);
             spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
-            
-        }  
+
+        }
     });
 };
 
 if (program.command.princ && program.command.args) {
     init();
 } else {
-    console.log('new error');
+    var error = new Error("No arguments provided!");
+    console.log("");
+    console.log("  error:", error.message);
+    console.log("");
+    process.exit();
 }

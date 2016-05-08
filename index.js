@@ -20,11 +20,11 @@ through which recipients can access the Corresponding Source. */
 const scrap = require('./src/ipinfo-scrap'),
 spawnSync = require('child_process').spawnSync,
 CIDR = require('cidr-js'),
-cidr = new CIDR();
+cidr = new CIDR(),
+program = require('commander');
 
-var command = process.argv[2];
-
-var printCommand = function ( command, args ) {
+function printCommand ( command, args ) {
+    
     var argsString = "";
     args.forEach(function( item, i ) {
         if ( i !== 0 ) {
@@ -34,34 +34,52 @@ var printCommand = function ( command, args ) {
         }
     });
     console.log(command, argsString);
-};
-
-if (command) {
-    init();
-} else {
-    console.error('ep');
-    process.exit();
+    
 }
 
-function init () {
-    scrap.asn(function (ip, num) {
-        
-        var indexPrimerEspacio = command.indexOf(" ");
-        var comandoPrincipal = command.substring(0, indexPrimerEspacio);
-        var argumentosDelComando = command.substring(indexPrimerEspacio+1);
+function parseArgs ( command ) {
+            
+    var indexing = command.indexOf(" ");
+    var comPrinc = command.substring(0, indexing);
+    var comArgs = command.substring(indexing+1);
+    return {
+        princ : comPrinc,
+        args : comArgs   
+    }
+ 
+}
+
+program
+    .version('2.0.0')
+    .option('-c, --command <args>', 'Command to be executed', parseArgs);
+    
+    program.on('--help', function(){
+    console.log('  Examples:');
+    console.log('');
+    console.log('    $ asn-blocks -c "nmap -n -P0 -vvv <ip>/<range>"');
+    console.log('    $ asn-blocks -c "smbclient -L <ip> -U%"');
+    console.log('');
+    console.log('    Where <ip> or <range> where be replaced for the values of the choosen block');
+    console.log('');
+});
+
+program.parse(process.argv);
+
+var init = function () {
+    scrap.asn(function ( ip, num ) {
         
         console.log('You are about to scan %s numbers of Ips\n', num);
         
-        if ( /\//.test(ip) == true && /nmap/.test(comandoPrincipal) == false) {
+        if ( /\//.test(ip) == true && /nmap/.test(program.command.princ) == false) {
             
             var results = cidr.list(ip);
             results.map(function(item, i) {
                 
-                var rep = argumentosDelComando.replace(/<ip>/, item);
+                var rep = program.command.args.replace(/<ip>/, item);
                 var listArgs = rep.split(/\s/);
                 
-                printCommand(comandoPrincipal, listArgs);
-                //spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
+                printCommand(program.command.princ, listArgs);
+                spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
             });
             
         } else {
@@ -70,13 +88,19 @@ function init () {
             var IP = ip.substring(0, p);
             var range = ip.substring(p+1);
             
-            var rep = argumentosDelComando.replace(/<ip>/, IP);
+            var rep = program.command.args.replace(/<ip>/, IP);
             var args = rep.replace(/<range>/, range);
             var listArgs = args.split(/\s/);
             
-            printCommand(comandoPrincipal, listArgs);
-            //spawnSync(comandoPrincipal, listArgs, {stdio:[0,1,2]});
+            printCommand(program.command.princ, listArgs);
+            spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
             
         }  
     });
+};
+
+if (program.command.princ && program.command.args) {
+    init();
+} else {
+    console.log('new error');
 }

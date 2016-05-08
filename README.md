@@ -9,33 +9,41 @@
 A script for mass scanning ASN blocks.
 
 ### Install
-```
-recommended install globaly: $ npm install asn-blocks -g
+**recommended install globaly:**
+``` bash
+$ npm install asn-blocks -g
 ```
 
 ### Usage
 ```
-$ asn-blocks [parameters]
+Usage: asn-blocks [options]
 
-and then follow instructions for scrap ASN blocks
+Options:
 
-example: $ asn-blocks nmap -sP
+  -h, --help            output usage information
+  -V, --version         output the version number
+  -c, --command <args>  Command to be executed
 
 ```
 
-
+### Examples:
+``` bash
+$ asn-blocks -c "nmap -n -P0 -vvv <ip>/<range>"
+$ asn-blocks -c "smbclient -L <ip> -U%"
 ```
-command executed will be:
-$ nmap -sP 190.168.0.1/24
+  Where `<ip>` or `<range>` where be replaced for the values of the choosen block
+
+**command executed will be:**
+``` bash
+$ nmap -n -P0 -vvv 190.168.0.1/24
+$ smbclient -L 190.168.0.1 -U%
 ```
 ### ToDo
 
 ```
-- Serialize data for the API
 - Add more providers
-- Independent modules for each task
-- Throw errors and usage
-- Help console
+- Improve errors and usage
+- Handle pid process kill
 ```
 
 *****************************************************************

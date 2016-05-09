@@ -70,7 +70,7 @@ var init = function () {
 
         console.log('You are about to scan %s numbers of Ips\n', num);
 
-        if ( /\//.test(ip) == true && /nmap/.test(program.command.princ) == false) {
+        if (/smbclient/.test(program.command.princ) == true) {
 
             var results = cidr.list(ip);
             results.map(function(item, i) {

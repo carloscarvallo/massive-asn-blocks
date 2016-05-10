@@ -37,7 +37,7 @@ var init = function ( com, args ) {
                 var listArgs = rep.split(/\s/);
 
                 input.printCommand( com, listArgs );
-                //spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
+                spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
             });
 
         } else {
@@ -51,7 +51,7 @@ var init = function ( com, args ) {
             var listArgs = argsString.split(/\s/);
 
             input.printCommand( com, listArgs );
-            //spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
+            spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
 
         }
     });

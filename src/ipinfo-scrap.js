@@ -5,9 +5,9 @@ const readline      = require('readline'),
       rl            = readline.createInterface(process.stdin, process.stdout);
 
 var getInput = function () {
-  var promise = new Promise(function(resolve, reject) {
-      rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function(resp) {
-          if ( resp ) {
+  var promise = new Promise(function( resolve, reject ) {
+      rl.question("Type the ISO code of the country (ex. PY Paraguay, AR Argentina): ", function( resp ) {
+          if (resp) {
               resolve(resp.toLowerCase());
           } else {
               reject(new Error('country needed!'));
@@ -18,8 +18,8 @@ var getInput = function () {
 };
 
 
-var asnScrap = function (callback) {
-    getInput().then(function (input) {
+var asnScrap = function ( callback ) {
+    getInput().then(function ( input ) {
 
         var options = {
             uri: ipinfo.url+'countries/'+input,
@@ -28,8 +28,8 @@ var asnScrap = function (callback) {
             }
         };
 
-        rp(options)
-        .then(function ($) {
+        rp( options )
+        .then(function( $ ) {
 
             var name = $('#heading').text();
             var text = "", org = "";
@@ -47,18 +47,25 @@ var asnScrap = function (callback) {
             return blockArray;
 
         })
-        .catch(function (err) {
+        .catch(function( err ) {
             // TODO: Request error treatment
             console.error(err);
         })
-        .then(function(block) {
+        .then(function( block ) {
 
-            block.map(function(item, index){
+            block.map(function( item, index ){
                 console.log('%s. %s %s', index+1, block[index][0], block[index][1]);
             });
 
             var reqAsn = 0;
             rl.question("Enter the number of the ASN do you want to scan : ", function( reqip ) {
+                
+                if (!reqip) {
+                    console.log('');
+                    console.log('you must enter a ASN number!');
+                    console.log('');
+                }
+                
                 var asn = {};
                 // Name of the ASN
                 reqAsn = block[reqip-1][0];
@@ -75,8 +82,8 @@ var asnScrap = function (callback) {
                     }
                 };
 
-                rp(options)
-                .then(function ($) {
+                rp( options )
+                .then(function( $ ) {
                     
                     var blocks = [], 
                         numIps = [],
@@ -99,11 +106,11 @@ var asnScrap = function (callback) {
                     
                     return asn;
                 })
-                .catch(function (err) {
+                .catch(function( err ) {
                     // TODO: Request error treatment
                     console.error(err);
                 })
-                .then(function (asn) {
+                .then(function( asn ) {
                     
                     //console.log(JSON.stringify(data, null, 4));
                     asn.netBlocks.forEach(function ( item, i ) {
@@ -111,21 +118,28 @@ var asnScrap = function (callback) {
                     });
                     
                     rl.question("Choose a netBlock from " + asn.name +" "+ asn.dir +" : ", function( resp ){
-                        callback(asn.netBlocks[resp - 1].dir, asn.netBlocks[resp - 1].num);
+                        
+                        if (!resp) {
+                            console.log('');
+                            console.log('you must choose a netBlock!');
+                            console.log('');
+                        }
+                        
+                        callback( asn.netBlocks[resp - 1].dir, asn.netBlocks[resp - 1].num );
                         rl.close();
                     });
                 });
                 
             });
-        }).catch(function(err) {
+        }).catch(function( err ) {
             // TODO: Cheerior error treatment
             console.error(err);
         });
 
-    }).catch(function(err) {
+    }).catch(function( err ) {
         // TODO: Input error treatment
         console.error(err.message);
-        rl.close();
+        asnScrap();
     });
 };
 

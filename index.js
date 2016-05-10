@@ -18,68 +18,26 @@ section 4, provided you include this license notice and a URL
 through which recipients can access the Corresponding Source. */
 
 const scrap = require('./src/ipinfo-scrap'),
+input = require('./src/input'),
 spawnSync = require('child_process').spawnSync,
 CIDR = require('cidr-js'),
-cidr = new CIDR(),
-program = require('commander');
+cidr = new CIDR();
 
-function printCommand ( command, args ) {
-
-    var argsString = "";
-    args.forEach(function( item, i ) {
-        if ( i !== 0 ) {
-            argsString += " " + item;
-        } else {
-            argsString += item;
-        }
-    });
-    console.log(command, argsString);
-
-}
-
-function parseArgs ( command ) {
-
-    var indexing = command.indexOf(" ");
-    var comPrinc = command.substring(0, indexing);
-    var comArgs = command.substring(indexing+1);
-    return {
-        princ : comPrinc,
-        args : comArgs
-    }
-
-}
-
-program
-    .version('2.0.0')
-    .option('-c, --command <args>', 'Command to be executed', parseArgs);
-
-    program.on('--help', function(){
-    console.log('  Examples:');
-    console.log('');
-    console.log('    $ asn-blocks -c "nmap -n -P0 -vvv <ip>/<range>"');
-    console.log('    $ asn-blocks -c "smbclient -L <ip> -U%"');
-    console.log('');
-    console.log('    Where <ip> or <range> where be replaced for the values of the choosen block');
-    console.log('');
-});
-
-program.parse(process.argv);
-
-var init = function () {
+var init = function ( com, args ) {
     scrap.asn(function ( ip, num ) {
 
         console.log('You are about to scan %s numbers of Ips\n', num);
 
-        if (/smbclient/.test(program.command.princ) == true) {
+        if (/smbclient/.test(com) == true) {
 
             var results = cidr.list(ip);
             results.map(function(item, i) {
 
-                var rep = program.command.args.replace(/<ip>/, item);
+                var rep = args.replace(/<ip>/, item);
                 var listArgs = rep.split(/\s/);
 
-                printCommand(program.command.princ, listArgs);
-                spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
+                input.printCommand( com, listArgs );
+                //spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
             });
 
         } else {
@@ -88,19 +46,19 @@ var init = function () {
             var IP = ip.substring(0, p);
             var range = ip.substring(p+1);
 
-            var rep = program.command.args.replace(/<ip>/, IP);
-            var args = rep.replace(/<range>/, range);
-            var listArgs = args.split(/\s/);
+            var rep = args.replace(/<ip>/, IP);
+            var argsString = rep.replace(/<range>/, range);
+            var listArgs = argsString.split(/\s/);
 
-            printCommand(program.command.princ, listArgs);
-            spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
+            input.printCommand( com, listArgs );
+            //spawnSync(program.command.princ, listArgs, {stdio:[0,1,2]});
 
         }
     });
 };
 
-if (program.command.princ && program.command.args) {
-    init();
+if (input.princ && input.args) {
+    init( input.princ, input.args );
 } else {
     var error = new Error("No arguments provided!");
     console.log("");

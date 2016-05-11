@@ -6,7 +6,7 @@
 # Massive ASN blocks
 
 [![Join the chat at https://gitter.im/carloscarvallo/massive-asn-blocks](https://badges.gitter.im/carloscarvallo/massive-asn-blocks.svg)](https://gitter.im/carloscarvallo/massive-asn-blocks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-CLI Tool in Node for scan over requested ASN's Blocks
+Cli tool for scanning ASN blocks
 
 ### Installation
 

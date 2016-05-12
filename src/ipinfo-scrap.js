@@ -2,7 +2,16 @@ const readline      = require('readline'),
       cheerio       = require('cheerio'),
       rp            = require('request-promise'),
       ipinfo        = require('../providers/ipinfo'),
+      fs            = require('fs'),
       rl            = readline.createInterface(process.stdin, process.stdout);
+
+function writeToFile ( data, dir ) {
+    var obj = JSON.stringify(data);
+    fs.writeFile( dir.toLowerCase() + '.json', obj, (err) => {
+        if (err) console.error(err);
+        console.log('\nIt\'s saved!');
+    });
+}
 
 var getInput = function () {
   var promise = new Promise(function( resolve, reject ) {
@@ -16,7 +25,6 @@ var getInput = function () {
   });
   return promise;
 };
-
 
 var asnScrap = function ( callback ) {
     getInput().then(function ( input ) {
@@ -112,7 +120,23 @@ var asnScrap = function ( callback ) {
                 })
                 .then(function( asn ) {
                     
-                    //console.log(JSON.stringify(data, null, 4));
+                    writeToFile(asn, asn.dir);
+                    /*
+                    @Object asn:
+                    
+                    { name: 'Telecel S.A.',
+                      dir: 'AS23201',
+                      netBlocks: 
+                        [ { _id: 1, dir: '181.40.0.0/16', num: '65,536' },
+                        { _id: 2, dir: '181.40.0.0/18', num: '16,384' },
+                        { _id: 3, dir: '181.40.0.0/19', num: '8,192' },
+                        { _id: 4, dir: '181.40.0.0/20', num: '4,096' },
+                        { _id: 5, dir: '181.40.7.0/24', num: '256' },
+                        { _id: 6, dir: '181.40.16.0/20', num: '4,096' },
+                        { _id: 7, dir: '181.40.16.0/24', num: '256' },
+                        { _id: 8, dir: '181.40.46.0/24', num: '256' },
+                    */ 
+                    
                     asn.netBlocks.forEach(function ( item, i ) {
                         console.log("%s. %s %s", asn.netBlocks[i]._id, asn.netBlocks[i].dir, asn.netBlocks[i].num);
                     });

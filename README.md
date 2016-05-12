@@ -1,4 +1,4 @@
-## ******************************* Beta Version *******************************
+## ******************************* Alpha Version *******************************
 
 [![bitHound Overall Score](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks/badges/score.svg)](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks)
 [![bitHound Code](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks/badges/code.svg)](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks)
@@ -6,17 +6,17 @@
 # Massive ASN blocks
 
 [![Join the chat at https://gitter.im/carloscarvallo/massive-asn-blocks](https://badges.gitter.im/carloscarvallo/massive-asn-blocks.svg)](https://gitter.im/carloscarvallo/massive-asn-blocks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-CLI Tool in Node for scan over requested ASN's Blocks
+Cli tool for scanning ASN blocks
 
-### Install
-**recommended install globaly:**
-``` bash
-$ npm install asn-blocks -g
-```
+### Installation
+
+#### **For now just clone this repository**
+
+***and...***
 
 ### Usage
 ```
-Usage: asn-blocks [options]
+Usage: node index.js [options]
 
 Options:
 
@@ -28,8 +28,8 @@ Options:
 
 ### Examples:
 ``` bash
-$ asn-blocks -c "nmap -n -P0 -vvv <ip>/<range>"
-$ asn-blocks -c "smbclient -L <ip> -U%"
+$ node index.js -c "nmap -n -P0 -vvv <ip>/<range>"
+$ node index.js -c "smbclient -L <ip> -U%"
 ```
   Where `<ip>` or `<range>` where be replaced for the values of the choosen block
 
@@ -44,6 +44,8 @@ $ smbclient -L 190.168.0.1 -U%
 - Add more providers
 - Improve errors and usage
 - Handle pid process kill
+- Handle memory usage
+- Update npm package
 ```
 
 *****************************************************************

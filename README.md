@@ -1,7 +1,7 @@
 [![bitHound Overall Score](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks/badges/score.svg)](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks)
 [![bitHound Code](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks/badges/code.svg)](https://www.bithound.io/github/carloscarvallo/massive-asn-blocks)
 
-## ******Alpha Version******
+## *********Alpha Version*********
 # Massive ASN blocks
 
 [![Join the chat at https://gitter.im/carloscarvallo/massive-asn-blocks](https://badges.gitter.im/carloscarvallo/massive-asn-blocks.svg)](https://gitter.im/carloscarvallo/massive-asn-blocks?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -11,11 +11,12 @@ Cli tool for scanning ASN blocks
 
 [Here's](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-with-nvm-node-version-manager-on-a-vps) a great guide of how to install **Node.js** using **NVM**
 
-
 #### **For now just clone this repository**
 
 ***and...***
-
+```
+$ npm install
+```
 ### Usage
 ```
 Usage: node index.js [options]
